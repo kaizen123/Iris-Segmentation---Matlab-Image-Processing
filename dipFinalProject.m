@@ -12,10 +12,13 @@
 %%%
 
 brightnessScalar = 1.5;
+blurScalar = 15;
+blurSigma = 1.8;
 pupilRadii = [22 66];
 irisRadii = [66 150];
-houghSensitivity = 0.90;
-houghSensitivityBase = 0.90;
+houghSensitivity = 0.80;
+houghSensitivityBase = houghSensitivity;
+
 
 
 %%%
@@ -49,10 +52,16 @@ figure, imshow(image), axis image, title('Brightened Image');
 % PHASE 1 - Gradient Filtering
 
 % Gaussian Filter
-kernal_size = 11;
+kernal_size = blurScalar;
 kernal_padding = floor(kernal_size/2);
-sigma = 1.8;
+sigma = blurSigma;
 filter = zeros(kernal_size);
+
+% % Crop image - DOES NOT WORK
+% for a = 1 : kernal_padding
+%     image(a,:) = [];
+%     image(:,a) = [];
+% end
 
 norm = 0;
 for col = 1 : kernal_size
@@ -124,7 +133,7 @@ I = I.*mag;
 % PHASE 3 - Hysteresis Thresholding
 
 low = 0.05 * max(max(I));
-high = 0.2 * max(max(I));
+high = 0.20 * max(max(I));
 result = zeros (newX, newY);
 for i = 1  : newX
     for j = 1 : newY
@@ -147,15 +156,17 @@ figure, imshow(finalEdges, []), axis image, title('Final Edges');
 %%%
 
 figure, imshow(image, []), axis image, title('Pupil / Iris Detection');
+
 pupilCenters = [];
-irisCenters = [];
-while isempty(pupilCenters)
+while (size(pupilCenters) ~= 1) 
     [pupilCenters, pupilR] = imfindcircles(finalEdges, pupilRadii, 'Sensitivity', houghSensitivity);
     houghSensitivity = houghSensitivity + 0.01
 end
 houghSensitivity = houghSensitivityBase;
 viscircles(pupilCenters, pupilR, 'Color', 'b');
-while isempty(irisCenters)
+
+irisCenters = [];
+while (size(irisCenters) ~= 1)
     [irisCenters, irisR] = imfindcircles(finalEdges, irisRadii, 'Sensitivity', houghSensitivity);
    houghSensitivity = houghSensitivity + 0.01
 end
