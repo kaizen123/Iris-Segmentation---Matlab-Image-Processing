@@ -27,10 +27,10 @@ houghSensitivityBase = houghSensitivity;
 
 file = uigetfile('*.*');
 image = imread(file); 
+image = imresize(image, [NaN 500]);
 original = image;
 image = rgb2gray(image);
-image = imresize(image, [NaN 500]);
-%figure, imshow(original), axis image, title('Original Image');
+%figure, imshow(image), axis image, title('Original Image');
 [rows,columns] = size(image);
 
 % Remove glare from eye
@@ -41,7 +41,7 @@ image =imcomplement(imfill(imcomplement(image),'holes'));
 image = imadjust(image);
 image = imadjust(image,[],[],1/brightnessScalar);
 image = imadjust(image);
-figure, imshow(image), axis image, title('Brightened Image');
+% figure, imshow(image), axis image, title('Brightened Image');
 
 
 
@@ -56,12 +56,6 @@ kernal_size = blurScalar;
 kernal_padding = floor(kernal_size/2);
 sigma = blurSigma;
 filter = zeros(kernal_size);
-
-% % Crop image - DOES NOT WORK
-% for a = 1 : kernal_padding
-%     image(a,:) = [];
-%     image(:,a) = [];
-% end
 
 norm = 0;
 for col = 1 : kernal_size
@@ -155,21 +149,29 @@ figure, imshow(finalEdges, []), axis image, title('Final Edges');
 %%%   HOUGH TRANSFORM PUPIL DETECTION
 %%%
 
-figure, imshow(image, []), axis image, title('Pupil / Iris Detection');
+figure, imshow(image), axis image, title('After Manipulation');
+
+[x, y] = size(original);
+crop = imcrop(original, [kernal_padding, kernal_padding, y-kernal_padding, x-kernal_padding] );
+figure, imshow(crop), axis image, title('Pupil / Iris Detection');
 
 pupilCenters = [];
-while (size(pupilCenters) ~= 1) 
+while (size(pupilCenters) ~= 1) & (houghSensitivity ~= 1.0)
     [pupilCenters, pupilR] = imfindcircles(finalEdges, pupilRadii, 'Sensitivity', houghSensitivity);
-    houghSensitivity = houghSensitivity + 0.01
+    houghSensitivity = houghSensitivity + 0.01;
 end
+"Pupil"
+houghSensitivity
 houghSensitivity = houghSensitivityBase;
 viscircles(pupilCenters, pupilR, 'Color', 'b');
 
 irisCenters = [];
-while (size(irisCenters) ~= 1)
+while (size(irisCenters) ~= 1) & (houghSensitivity ~= 1.0)
     [irisCenters, irisR] = imfindcircles(finalEdges, irisRadii, 'Sensitivity', houghSensitivity);
-   houghSensitivity = houghSensitivity + 0.01
+   houghSensitivity = houghSensitivity + 0.01;
 end
+"Iris"
+houghSensitivity
 houghSensitivity = houghSensitivityBase;
 viscircles(irisCenters, irisR, 'Color', 'r');
 
