@@ -26,7 +26,8 @@ houghSensitivityBase = houghSensitivity;
 %%%
 
 file = uigetfile('*.*');
-image = imread(file); 
+image = imread(file);
+originalImage = image;
 %image = imresize(image, [NaN 3500]);
 
 %%%
@@ -34,7 +35,6 @@ image = imread(file);
 %%% 
 %%%
 flag = 0;
-img = imread('lena.png');
 
 reqToolboxes = {'Computer Vision System Toolbox', 'Image Processing Toolbox'};
 if( checkToolboxes(reqToolboxes) )
@@ -45,7 +45,9 @@ if( checkToolboxes(reqToolboxes) )
 
     leftEye = imcrop(image, bbox(:, 5: 8));
     rightEye = imcrop(image, bbox(:, 9:12));
-
+    leftEyeBbox = bbox(:, 5:8);
+    rightEyeBbox = bbox(:, 9:12);
+    
     figure;imshow(leftEye);
     figure;imshow(rightEye);
 
@@ -61,9 +63,17 @@ end
 for i = 0:1
     if flag == 0
         if i == 0
-            image = leftEye;       
+            image = leftEye;
+            X = leftEyeBbox(1);
+            Y = leftEyeBbox(2);
+            W = leftEyeBbox(3);
+            H = leftEyeBbox(4);
         else
             image = rightEye;
+            X = rightEyeBbox(1);
+            Y = rightEyeBbox(2);
+            W = rightEyeBbox(3);
+            H = rightEyeBbox(4);
         end
     end
     image = imresize(image, [NaN 500]);
@@ -213,6 +223,12 @@ for i = 0:1
     houghSensitivity
     houghSensitivity = houghSensitivityBase;
     viscircles(irisCenters, irisR, 'Color', 'r');
+    
+    crop = imresize(image, [NaN W]);
+    [newH, newW, ~] = size(crop); 
+    figure,imshow(crop);
+%    originalImage(Y:Y+newH-1, X:X+newW-1, :) = crop;
+%    figure, imshow(image, []), axis image, title('Final Image');
 end
 
 
