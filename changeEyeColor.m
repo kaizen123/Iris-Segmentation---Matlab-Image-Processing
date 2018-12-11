@@ -210,7 +210,7 @@ for i = 0:1
 
     [x, y] = size(original);
     crop = imcrop(original, [kernal_padding, kernal_padding, y-kernal_padding, x-kernal_padding] );
-    figure, imshow(crop), axis image, title('Pupil / Iris Detection');
+%    figure, imshow(crop), axis image, title('Pupil / Iris Detection');
 
     pupilCenters = [];
     while (size(pupilCenters) ~= 1) & (houghSensitivity ~= 1.0)
@@ -220,7 +220,7 @@ for i = 0:1
     "Pupil"
     houghSensitivity
     houghSensitivity = houghSensitivityBase;
-    viscircles(pupilCenters, pupilR, 'Color', 'b');
+%    viscircles(pupilCenters, pupilR, 'Color', 'b');
 
     irisCenters = [];
     while (size(irisCenters) ~= 1) & (houghSensitivity ~= 1.0)
@@ -230,7 +230,7 @@ for i = 0:1
     "Iris"
     houghSensitivity
     houghSensitivity = houghSensitivityBase;
-    viscircles(irisCenters, irisR, 'Color', 'r');
+%    viscircles(irisCenters, irisR, 'Color', 'r');
     
     %%%
     %%%   Eye Mask Overlaying
