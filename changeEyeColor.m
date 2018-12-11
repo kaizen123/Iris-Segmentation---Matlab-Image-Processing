@@ -11,7 +11,7 @@
 %%%   IMPORTANT VARIABLES
 %%%
 
-%%%%%%%function [finalImage] = dipFinalProject(inputImage, colorFileName)
+function [finalImage] = changeEyeColor(inputImage, colorFileName)
 
 brightnessScalar = 1.5;
 blurScalar = 15;
@@ -32,9 +32,9 @@ houghSensitivityBase = houghSensitivity;
 %%%   INITIALIZATION
 %%%
 
-file = uigetfile('*.*');
-image = imread(file);
-%%%%%%image = inputImage;
+%file = uigetfile('*.*');
+%image = imread(file);
+image = inputImage;
 originalImage = image;
 %image = imresize(image, [NaN 3500]);
 
@@ -240,9 +240,9 @@ for i = 0:1
     bw = rgb2gray(crop);
     bwImage = cat(3, bw, bw, bw);
 
-    colorFile = uigetfile('*.*');
-    colorMask = imread(colorFile);
-    % colorMask = imread(colorFileName);
+    %colorFile = uigetfile('*.*');
+    %colorMask = imread(colorFile);
+    colorMask = imread(colorFileName);
     colorMask = imresize(colorMask, [NaN floor(irisR(1)*2)]);
     rgb2hsv(colorMask);
 
@@ -296,9 +296,9 @@ for i = 0:1
     originalImage(Y:Y+newH-1, X:X+newW-1, :) = testImage;
 end
 
-figure, imshow(originalImage, []), axis image, title('Final Image');
+%figure, imshow(originalImage, []), axis image, title('Final Image');
 finalImage = originalImage;
 
-%%%%%%end
+end
 
 
