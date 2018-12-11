@@ -11,6 +11,8 @@
 %%%   IMPORTANT VARIABLES
 %%%
 
+%%%%%%%function [finalImage] = dipFinalProject(inputImage, colorFileName)
+
 brightnessScalar = 1.5;
 blurScalar = 15;
 blurSigma = 1.8;
@@ -27,6 +29,7 @@ houghSensitivityBase = houghSensitivity;
 
 file = uigetfile('*.*');
 image = imread(file);
+%%%%%%image = inputImage;
 originalImage = image;
 %image = imresize(image, [NaN 3500]);
 
@@ -234,6 +237,7 @@ for i = 0:1
 
     colorFile = uigetfile('*.*');
     colorMask = imread(colorFile);
+    % colorMask = imread(colorFileName);
     colorMask = imresize(colorMask, [NaN floor(irisR(1)*2)]);
     rgb2hsv(colorMask);
 
@@ -258,6 +262,21 @@ for i = 0:1
 %         end
         end
     end
+    
+    pupilFile = 'Artboard_8_copy.png';
+    pupilMask = imread(pupilFile);
+    pupilMask = imresize(pupilMask, [NaN floor(pupilR(1)*2)]);
+
+% Remove Pupil Color
+    for i = 1 : floor(pupilR(1)*2)
+        for j = 1 : floor(pupilR(1)*2)
+        %         if testImage(topIrisBound + i, leftIrisBound + j, 1) >= 16 || testImage(topIrisBound + i, leftIrisBound + j, 2) >= 16 || testImage(topIrisBound + i, leftIrisBound + j, 3) >= 16
+            testImage(topPupilBound + i, leftPupilBound + j, 1) = testImage(topPupilBound + i, leftPupilBound + j, 1) - floor(pupilMask(i,j, 1)*0.5);
+            testImage(topPupilBound + i, leftPupilBound + j, 2) = testImage(topPupilBound + i, leftPupilBound + j, 2) - floor(pupilMask(i,j, 2)*0.5);
+            testImage(topPupilBound + i, leftPupilBound + j, 3) = testImage(topPupilBound + i, leftPupilBound + j, 3) - floor(pupilMask(i,j, 3)*0.5);
+%         end
+        end
+    end
 
 %    figure, imshow(testImage), axis image, title('Color Addition');
     
@@ -267,5 +286,8 @@ for i = 0:1
 end
 
 figure, imshow(originalImage, []), axis image, title('Final Image');
+finalImage = originalImage;
+
+%%%%%%end
 
 
