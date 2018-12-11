@@ -11,7 +11,7 @@
 %%%   IMPORTANT VARIABLES
 %%%
 
-function [finalImage] = changeEyeColor(inputImage, colorFileName)
+function [finalImage, bbox] = changeEyeColor(inputImage, colorFileName, bboxP, computeEyeP)
 
 brightnessScalar = 1.5;
 blurScalar = 15;
@@ -25,6 +25,7 @@ pupilRadii = [10 20];
 irisRadii = [21 60];
 houghSensitivity = 0.80;
 houghSensitivityBase = houghSensitivity;
+computeEye = computeEyeP;
 
 
 
@@ -44,30 +45,37 @@ originalImage = image;
 %%%
 flag = 0;
 
-reqToolboxes = {'Computer Vision System Toolbox', 'Image Processing Toolbox'};
-if( checkToolboxes(reqToolboxes) )
-    detector = buildDetector();
-    [bbox bbimg faces bbfaces] = detectFaceParts(detector,image,2);
-    
-%    figure;imshow(bbimg);
+if( computeEye == 1 )
+    reqToolboxes = {'Computer Vision System Toolbox', 'Image Processing Toolbox'};
+    if( checkToolboxes(reqToolboxes) )
+        detector = buildDetector();
+        [bbox bbimg faces bbfaces] = detectFaceParts(detector,image,2);
 
-    leftEye = imcrop(image, bbox(:, 5: 8));
-    rightEye = imcrop(image, bbox(:, 9:12));
-    leftEyeBbox = bbox(:, 5:8);
-    rightEyeBbox = bbox(:, 9:12);
-    
-%    figure;imshow(leftEye);
-%    figure;imshow(rightEye);
+    %    figure;imshow(bbimg);
 
-%    figure;imshow(bbimg);
-%    for i=1:size(bbfaces,1)
-%        figure;imshow(bbfaces{i});
-%    end
+        leftEye = imcrop(image, bbox(:, 5: 8));
+        rightEye = imcrop(image, bbox(:, 9:12));
+        leftEyeBbox = bbox(:, 5:8);
+        rightEyeBbox = bbox(:, 9:12);
+
+    %    figure;imshow(leftEye);
+    %    figure;imshow(rightEye);
+
+    %    figure;imshow(bbimg);
+    %    for i=1:size(bbfaces,1)
+    %        figure;imshow(bbfaces{i});
+    %    end
+    else
+        flag = 1;
+        error('detectFaceParts requires: Computer Vision System Toolbox and Image Processing Toolbox. Please install these toolboxes.');
+    end
 else
-    flag = 1;
-    error('detectFaceParts requires: Computer Vision System Toolbox and Image Processing Toolbox. Please install these toolboxes.');
+    bbox = bboxP;
+    leftEyeBbox = bboxP(:, 5:8);
+    rightEyeBbox = bboxP(:, 9:12);
+    leftEye = imcrop(image, bboxP(:, 5: 8));
+    rightEye = imcrop(image, bboxP(:, 9:12));
 end
-
 for i = 0:1
     if flag == 0
         if i == 0

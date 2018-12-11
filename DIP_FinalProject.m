@@ -79,99 +79,142 @@ end
 % --- Executes on button press in pushbutton_green.
 function pushbutton_green_Callback(hObject, eventdata, handles)
     global path;
+    global bbox;
+    global computeEye;
     image = imread(path);
-    [testImage] = changeEyeColor(image, 'color_Green.png');
+    [testImage, bbox] = changeEyeColor(image, 'color_Green.png', bbox, computeEye);
+    computeEye = 0;
     imshow(testImage);
 end
 
 function pushbutton_brown_Callback(hObject, eventdata, handles)
     global path;
+    global bbox;
+    global computeEye;
     image = imread(path);
-    [testImage] = changeEyeColor(image, 'color_Brown.png');
+    [testImage, bbox] = changeEyeColor(image, 'color_Brown.png', bbox, computeEye);
+    computeEye = 0;
     imshow(testImage);
     
 end
 
 function pushbutton_pink_Callback(hObject, eventdata, handles)
     global path;
+    global bbox;
+    global computeEye;
     image = imread(path);
-    [testImage] = changeEyeColor(image, 'color_Pink.png');
+    [testImage, bbox] = changeEyeColor(image, 'color_Pink.png', bbox, computeEye);
+    computeEye = 0;
     imshow(testImage);
 end
 
 function pushbutton_honey_Callback(hObject, eventdata, handles)
-    global path;
+global path;
+    global bbox;
+    global computeEye;
     image = imread(path);
-    [testImage] = changeEyeColor(image, 'color_Honey.png');
+    [testImage, bbox] = changeEyeColor(image, 'color_Honey.png', bbox, computeEye);
+    computeEye = 0;
     imshow(testImage);
 end
 
 function pushbutton_sterlingGrey_Callback(hObject, eventdata, handles)
     global path;
+    global bbox;
+    global computeEye;
     image = imread(path);
-    [testImage] = changeEyeColor(image, 'color_SterlingGrey.png');
+    [testImage, bbox] = changeEyeColor(image, 'color_SterlingGrey.png', bbox, computeEye);
+    computeEye = 0;
     imshow(testImage);
 end
 
 function pushbutton_blue_Callback(hObject, eventdata, handles)
     global path;
+    global bbox;
+    global computeEye;
     image = imread(path);
-    [testImage] = changeEyeColor(image, 'color_Blue.png');
+    [testImage, bbox] = changeEyeColor(image, 'color_Blue.png', bbox, computeEye);
+    computeEye = 0;
     imshow(testImage);
 end
 
 function pushbutton_violet_Callback(hObject, eventdata, handles)
-    global path;
+global path;
+    global bbox;
+    global computeEye;
     image = imread(path);
-    [testImage] = changeEyeColor(image, 'color_Violet.png');
+    [testImage, bbox] = changeEyeColor(image, 'color_Violet.png', bbox, computeEye);
+    computeEye = 0;
     imshow(testImage);
 end
 
 function pushbutton_grey_Callback(hObject, eventdata, handles)
-    global path;
+global path;
+    global bbox;
+    global computeEye;
     image = imread(path);
-    [testImage] = changeEyeColor(image, 'color_Grey.png');
+    [testImage, bbox] = changeEyeColor(image, 'color_Grey.png', bbox, computeEye);
+    computeEye = 0;
     imshow(testImage);
 end
 
 function pushbutton_turquoise_Callback(hObject, eventdata, handles)
-    global path;
+global path;
+    global bbox;
+    global computeEye;
     image = imread(path);
-    [testImage] = changeEyeColor(image, 'color_Turquoise.png');
+    [testImage, bbox] = changeEyeColor(image, 'color_Turquoise.png', bbox, computeEye);
+    computeEye = 0;
     imshow(testImage);
 end
 
 function pushbutton_trueSapphire_Callback(hObject, eventdata, handles)
-    global path;
+global path;
+    global bbox;
+    global computeEye;
     image = imread(path);
-    [testImage] = changeEyeColor(image, 'color_TrueSapphire.png');
+    [testImage, bbox] = changeEyeColor(image, 'color_TrueSapphire.png', bbox, computeEye);
+    computeEye = 0;
     imshow(testImage);
 end
 
 function pushbutton_red_Callback(hObject, eventdata, handles)
-    global path;
+global path;
+    global bbox;
+    global computeEye;
     image = imread(path);
-    [testImage] = changeEyeColor(image, 'color_Red.png');
+    [testImage, bbox] = changeEyeColor(image, 'color_Red.png', bbox, computeEye);
+    computeEye = 0;
     imshow(testImage);
 end
 
 function pushbutton_hazel_Callback(hObject, eventdata, handles)
-    global path;
+global path;
+    global bbox;
+    global computeEye;
     image = imread(path);
-    [testImage] = changeEyeColor(image, 'color_Hazel.png');
+    [testImage, bbox] = changeEyeColor(image, 'color_Hazel.png', bbox, computeEye);
+    computeEye = 0;
     imshow(testImage);
 end
 
 function pushbutton_gemstoneGreen_Callback(hObject, eventdata, handles)
-    global path;
-    changeEyeColor(imread(path), 'color_GemstoneGreen.png');
+global path;
+    global bbox;
+    global computeEye;
+    image = imread(path);
+    [testImage, bbox] = changeEyeColor(image, 'color_GemstoneGreen.png', bbox, computeEye);
+    computeEye = 0;
     imshow(testImage);
 end
 
 function pushbutton_brilliantBlue_Callback(hObject, eventdata, handles)
-    global path;
+global path;
+    global bbox;
+    global computeEye;
     image = imread(path);
-    [testImage] = changeEyeColor(image, 'color_BrilliantBlue.png');
+    [testImage, bbox] = changeEyeColor(image, 'color_BrilliantBlue.png', bbox, computeEye);
+    computeEye = 0;
     imshow(testImage);
 end
 
@@ -179,6 +222,8 @@ end
 function pushbutton_uploadPortrait_Callback(hObject, eventdata, handles)
     axes(handles.portraitHolder)
     global path;
+    global computeEye;
+    computeEye = 1;
     path = uigetfile('*.*');
     matlabImage = imread(path);
     image(matlabImage)

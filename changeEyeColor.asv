@@ -11,13 +11,18 @@
 %%%   IMPORTANT VARIABLES
 %%%
 
-function [finalImage] = generateData(filename)
+function [finalImage, ] = changeEyeColor(inputImage, colorFileName)
 
 brightnessScalar = 1.5;
 blurScalar = 15;
 blurSigma = 1.8;
-pupilRadii = [10 21];
-irisRadii = [21 63];
+pupilRadii = [10 20];
+%guy image, 10 - 20
+% woman image 10 - 28
+% AA woman 10 - 22
+% fringe 16 - 31
+% blue eyed man 16 - 31
+irisRadii = [21 60];
 houghSensitivity = 0.80;
 houghSensitivityBase = houghSensitivity;
 
@@ -27,8 +32,9 @@ houghSensitivityBase = houghSensitivity;
 %%%   INITIALIZATION
 %%%
 
-file = uigetfile('*.*');
-image = imread(file);
+%file = uigetfile('*.*');
+%image = imread(file);
+image = inputImage;
 originalImage = image;
 %image = imresize(image, [NaN 3500]);
 
@@ -204,7 +210,7 @@ for i = 0:1
 
     [x, y] = size(original);
     crop = imcrop(original, [kernal_padding, kernal_padding, y-kernal_padding, x-kernal_padding] );
-    figure, imshow(crop), axis image, title('Pupil / Iris Detection');
+%    figure, imshow(crop), axis image, title('Pupil / Iris Detection');
 
     pupilCenters = [];
     while (size(pupilCenters) ~= 1) & (houghSensitivity ~= 1.0)
@@ -214,7 +220,7 @@ for i = 0:1
     "Pupil"
     houghSensitivity
     houghSensitivity = houghSensitivityBase;
-    viscircles(pupilCenters, pupilR, 'Color', 'b');
+%    viscircles(pupilCenters, pupilR, 'Color', 'b');
 
     irisCenters = [];
     while (size(irisCenters) ~= 1) & (houghSensitivity ~= 1.0)
@@ -224,7 +230,7 @@ for i = 0:1
     "Iris"
     houghSensitivity
     houghSensitivity = houghSensitivityBase;
-    viscircles(irisCenters, irisR, 'Color', 'r');
+%    viscircles(irisCenters, irisR, 'Color', 'r');
     
     %%%
     %%%   Eye Mask Overlaying
@@ -234,8 +240,9 @@ for i = 0:1
     bw = rgb2gray(crop);
     bwImage = cat(3, bw, bw, bw);
 
-    colorFile = uigetfile('*.*');
-    colorMask = imread(colorFile);
+    %colorFile = uigetfile('*.*');
+    %colorMask = imread(colorFile);
+    colorMask = imread(colorFileName);
     colorMask = imresize(colorMask, [NaN floor(irisR(1)*2)]);
     rgb2hsv(colorMask);
 
@@ -269,9 +276,15 @@ for i = 0:1
     for i = 1 : floor(pupilR(1)*2)
         for j = 1 : floor(pupilR(1)*2)
         %         if testImage(topIrisBound + i, leftIrisBound + j, 1) >= 16 || testImage(topIrisBound + i, leftIrisBound + j, 2) >= 16 || testImage(topIrisBound + i, leftIrisBound + j, 3) >= 16
-            testImage(topPupilBound + i, leftPupilBound + j, 1) = testImage(topPupilBound + i, leftPupilBound + j, 1) - pupilMask(i,j, 1);
-            testImage(topPupilBound + i, leftPupilBound + j, 2) = testImage(topPupilBound + i, leftPupilBound + j, 2) - pupilMask(i,j, 2);
-            testImage(topPupilBound + i, leftPupilBound + j, 3) = testImage(topPupilBound + i, leftPupilBound + j, 3) - pupilMask(i,j, 3);
+            p1 = testImage(topPupilBound + i, leftPupilBound + j, 1);
+            p2 = testImage(topPupilBound + i, leftPupilBound + j, 2);
+            p3 = testImage(topPupilBound + i, leftPupilBound + j, 3);
+            c1 = bwImage(topPupilBound + i, leftPupilBound + j, 1);
+            c2 = bwImage(topPupilBound + i, leftPupilBound + j, 2);
+            c3 = bwImage(topPupilBound + i, leftPupilBound + j, 3);
+            testImage(topPupilBound + i, leftPupilBound + j, 1) = p1 - (p1 - c1)*(pupilMask(i,j, 1)/77);
+            testImage(topPupilBound + i, leftPupilBound + j, 2) = p2 - (p2 - c2)*(pupilMask(i,j, 2)/77);
+            testImage(topPupilBound + i, leftPupilBound + j, 3) = p3 - (p3 - c3)*(pupilMask(i,j, 3)/77);
 %         end
         end
     end
@@ -283,7 +296,9 @@ for i = 0:1
     originalImage(Y:Y+newH-1, X:X+newW-1, :) = testImage;
 end
 
-figure, imshow(originalImage, []), axis image, title('Final Image');
+%figure, imshow(originalImage, []), axis image, title('Final Image');
 finalImage = originalImage;
+
+end
 
 
