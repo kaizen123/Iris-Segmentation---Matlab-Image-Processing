@@ -79,41 +79,15 @@ end
 % --- Executes on button press in pushbutton_green.
 function pushbutton_green_Callback(hObject, eventdata, handles)
     global path;
-    global pupilCenters;
-    global pupilR;
-    global irisCenters;
-    global irisR;
-    global leftEye;
-    global rightEye;
-    global leftEyeBbox;
-    global rightEyeBbox;
-    global calculateFlag;
-    global eyeFlag;
     image = imread(path);
-    [testImage, pupilCenters, pupilR, irisCenters, irisR, leftEye, rightEye, leftEyeBbox, rightEyeBbox] = changeEyeColor(image, 'color_Green.png', pupilCenters, pupilR, irisCenters, irisR, leftEye, rightEye, leftEyeBbox, rightEyeBbox, calculateFlag, eyeFlag);
-    %[testImage, pupilCenters, pupilR, irisCenters, irisR] = changeEyeColor(image, 'color_Green.png');
-    calculateFlag = 0;
-    eyeFlag = 0;
+    [testImage] = changeEyeColor(image, 'color_Green.png');
     imshow(testImage);
 end
 
 function pushbutton_brown_Callback(hObject, eventdata, handles)
     global path;
-    global pupilCenters;
-    global pupilR;
-    global irisCenters;
-    global irisR;
-    global leftEye;
-    global rightEye;
-    global leftEyeBbox;
-    global rightEyeBbox;
-    global calculateFlag;
-    global eyeFlag;
     image = imread(path);
-    [testImage, pupilCenters, pupilR, irisCenters, irisR, leftEye, rightEye, leftEyeBbox, rightEyeBbox] = changeEyeColor(image, 'color_Brown.png', pupilCenters, pupilR, irisCenters, irisR, leftEye, rightEye, leftEyeBbox, rightEyeBbox, calculateFlag, eyeFlag);
-    %[testImage, pupilCenters, pupilR, irisCenters, irisR] = changeEyeColor(image, 'color_Green.png');
-    calculateFlag = 0;
-    eyeFlag = 0;
+    [testImage] = changeEyeColor(image, 'color_Brown.png');
     imshow(testImage);
     
 end
@@ -204,14 +178,10 @@ end
 
 function pushbutton_uploadPortrait_Callback(hObject, eventdata, handles)
     axes(handles.portraitHolder)
-    global path
-    global calculateFlag;
-    global eyeFlag;
+    global path;
     path = uigetfile('*.*');
     matlabImage = imread(path);
     image(matlabImage)
-    calculateFlag = 1;
-    eyeFlag = 1;
     axis off
     axis image
 end

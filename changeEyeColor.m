@@ -11,7 +11,7 @@
 %%%   IMPORTANT VARIABLES
 %%%
 
-function [finalImage, pupilCenters, pupilR, irisCenters, irisR, leftEye, rightEye, leftEyeBbox, rightEyeBbox] = changeEyeColor(inputImage, colorFileName, pupilCentersP, pupilRP, irisCentersP, irisRP, leftEyeP, rightEyeP, leftEyeBboxP, rightEyeBboxP, calculateFlag, eyeFlag)
+function [finalImage] = changeEyeColor(inputImage, colorFileName)
 
 brightnessScalar = 1.5;
 blurScalar = 15;
@@ -45,8 +45,7 @@ originalImage = image;
 flag = 0;
 
 reqToolboxes = {'Computer Vision System Toolbox', 'Image Processing Toolbox'};
-if(eyeFlag == 1)
-    if( checkToolboxes(reqToolboxes) )
+if( checkToolboxes(reqToolboxes) )
     detector = buildDetector();
     [bbox bbimg faces bbfaces] = detectFaceParts(detector,image,2);
     
@@ -64,23 +63,13 @@ if(eyeFlag == 1)
 %    for i=1:size(bbfaces,1)
 %        figure;imshow(bbfaces{i});
 %    end
-    else
-        flag = 1;
-        error('detectFaceParts requires: Computer Vision System Toolbox and Image Processing Toolbox. Please install these toolboxes.');
-    end
 else
-    pupilCenters = pupilCentersP;
-    pupilR = pupilRP;
-    irisCenters = irisCentersP; 
-    irisR = irisRP; 
-    leftEye = leftEyeP; 
-    rightEye = rightEyeP;
-    leftEyeBbox = leftEyeBboxP; 
-    rightEyeBbox = rightEyeBboxP;
+    flag = 1;
+    error('detectFaceParts requires: Computer Vision System Toolbox and Image Processing Toolbox. Please install these toolboxes.');
 end
 
 for i = 0:1
-    if flag == 0 
+    if flag == 0
         if i == 0
             image = leftEye;
             X = leftEyeBbox(1);
@@ -97,158 +86,152 @@ for i = 0:1
     end
     image = imresize(image, [NaN 500]);
     original = image;
-    if( calculateFlag == 1)
-        image = rgb2gray(image);
-        %figure, imshow(image), axis image, title('Original Image');
-        [rows,columns] = size(image);
+    image = rgb2gray(image);
+    %figure, imshow(image), axis image, title('Original Image');
+    [rows,columns] = size(image);
 
-        % Remove glare from eye
-        image =imcomplement(imfill(imcomplement(image),'holes'));
-        %figure, imshow(image), axis image, title('Glare-Fixed Image');
+    % Remove glare from eye
+    image =imcomplement(imfill(imcomplement(image),'holes'));
+    %figure, imshow(image), axis image, title('Glare-Fixed Image');
 
-        % Brighten and increase contrast
-        image = imadjust(image);
-        image = imadjust(image,[],[],1/brightnessScalar);
-        image = imadjust(image);
-        % figure, imshow(image), axis image, title('Brightened Image');
-
+    % Brighten and increase contrast
+    image = imadjust(image);
+    image = imadjust(image,[],[],1/brightnessScalar);
+    image = imadjust(image);
+    % figure, imshow(image), axis image, title('Brightened Image');
 
 
-        %%%
-        %%%   CANNY EDGE DETECTION
-        %%%
 
-        % PHASE 1 - Gradient Filtering
+    %%%
+    %%%   CANNY EDGE DETECTION
+    %%%
 
-        % Gaussian Filter
-        kernal_size = blurScalar;
-        kernal_padding = floor(kernal_size/2);
-        sigma = blurSigma;
-        filter = zeros(kernal_size);
+    % PHASE 1 - Gradient Filtering
 
-        norm = 0;
-        for col = 1 : kernal_size
-            for row = 1 : kernal_size
-               x = (col-(kernal_padding+1))^2 + (row-(kernal_padding+1))^2;
-               filter(col,row) = exp(-x/(2*sigma^2));
-               norm = norm + filter(col,row);
-            end
+    % Gaussian Filter
+    kernal_size = blurScalar;
+    kernal_padding = floor(kernal_size/2);
+    sigma = blurSigma;
+    filter = zeros(kernal_size);
+
+    norm = 0;
+    for col = 1 : kernal_size
+        for row = 1 : kernal_size
+           x = (col-(kernal_padding+1))^2 + (row-(kernal_padding+1))^2;
+           filter(col,row) = exp(-x/(2*sigma^2));
+           norm = norm + filter(col,row);
         end
-        filter = filter / norm;
-        gaussian_image = conv2(image, filter, 'valid');
-        %figure, imshow(gaussian_image, []), axis image, title('Gaussian Blurred Image');
-
-        [Gx, Gy] = gradient(filter);
-        Fx = conv2(gaussian_image, Gx, 'same');
-        Fx = imcomplement(Fx);
-        Fy = conv2(gaussian_image, Gy, 'same');
-
-        mag = sqrt((Fx.^2)+(Fy.^2));
-        %figure, imshow(mag, []), axis image, title('Magnitude');
-        D = (atan2(Fy,Fx))*180/pi;
-        %figure, imshow(D, []), axis image, title('Theta');
-
-        % PHASE 2 - Nonmaximum Suppression
-
-        [newX,newY] = size(D);
-        newD = zeros(newX,newY);
-        for x = 1 : newX
-            for y = 1 : newY
-
-                if D(x,y) < 0
-                    D(x,y) = D(x,y) + 360; % makes all directions positive
-                end
-
-                D(x,y) = mod(D(x,y), 180);
-
-                if  D(x,y) <= 22.5
-                    newD(x,y) = 0;
-                elseif D(x,y) <= 67.5
-                    newD(x,y) = 45;
-                elseif D(x,y) <= 112.5
-                    newD(x,y) = 90;
-                elseif D(x,y) <= 157.5
-                    newD(x,y) = 135;
-                elseif D(x,y) <= 180
-                    newD(x,y) = 0;
-
-                end
-            end
-        end
-
-        I = zeros(newX, newY);
-        for i = 2 : newX-1
-            for j = 2 : newY-1
-                if (newD(i,j)==0)
-                    I(i,j) = (mag(i,j) == max([mag(i,j), mag(i,j+1), mag(i,j-1)]));
-                elseif (newD(i,j)==45)
-                    I(i,j) = (mag(i,j) == max([mag(i,j), mag(i+1,j-1), mag(i-1,j+1)]));
-                elseif (newD(i,j)==90)
-                    I(i,j) = (mag(i,j) == max([mag(i,j), mag(i+1,j), mag(i-1,j)]));
-                elseif (newD(i,j)==135)
-                    I(i,j) = (mag(i,j) == max([mag(i,j), mag(i+1,j+1), mag(i-1,j-1)]));
-                end
-            end
-        end
-        I = I.*mag;
-        %figure, imshow(I, []), axis image, title('Non-Max Suppressed');
-
-        % PHASE 3 - Hysteresis Thresholding
-
-        low = 0.05 * max(max(I));
-        high = 0.20 * max(max(I));
-        result = zeros (newX, newY);
-        for i = 1  : newX
-            for j = 1 : newY
-                if I(i, j) < low
-                    result(i, j) = 0;
-                elseif I(i, j) > high
-                    result(i, j) = 1;
-                elseif I(i+1,j)>high || I(i-1,j)>high || I(i,j+1)>high || I(i,j-1)>high || I(i-1, j-1)>high || I(i-1, j+1)>high || I(i+1, j+1)>high || I(i+1, j-1)>high
-                    result(i,j) = 1;
-                end
-            end
-        end
-        finalEdges = uint8(result.*255);
-    %    figure, imshow(finalEdges, []), axis image, title('Final Edges');
-
-
-
-        %%%
-        %%%   HOUGH TRANSFORM PUPIL DETECTION
-        %%%
-
-    %    figure, imshow(image), axis image, title('After Manipulation');
-
-        [x, y] = size(original);
-        crop = imcrop(original, [kernal_padding, kernal_padding, y-kernal_padding, x-kernal_padding] );
-    %    figure, imshow(crop), axis image, title('Pupil / Iris Detection');
-
-        pupilCenters = [];
-        while (size(pupilCenters) ~= 1) & (houghSensitivity ~= 1.0)
-            [pupilCenters, pupilR] = imfindcircles(finalEdges, pupilRadii, 'Sensitivity', houghSensitivity);
-            houghSensitivity = houghSensitivity + 0.01;
-        end
-        "Pupil"
-        houghSensitivity
-        houghSensitivity = houghSensitivityBase;
-    %    viscircles(pupilCenters, pupilR, 'Color', 'b');
-
-        irisCenters = [];
-        while (size(irisCenters) ~= 1) & (houghSensitivity ~= 1.0)
-            [irisCenters, irisR] = imfindcircles(finalEdges, irisRadii, 'Sensitivity', houghSensitivity);
-           houghSensitivity = houghSensitivity + 0.01;
-        end
-        "Iris"
-        houghSensitivity
-        houghSensitivity = houghSensitivityBase;
-    %    viscircles(irisCenters, irisR, 'Color', 'r');
-    else
-        kernal_size = blurScalar;
-        kernal_padding = floor(kernal_size/2);
-        [x, y] = size(original);
-        crop = imcrop(original, [kernal_padding, kernal_padding, y-kernal_padding, x-kernal_padding] );
     end
+    filter = filter / norm;
+    gaussian_image = conv2(image, filter, 'valid');
+    %figure, imshow(gaussian_image, []), axis image, title('Gaussian Blurred Image');
+
+    [Gx, Gy] = gradient(filter);
+    Fx = conv2(gaussian_image, Gx, 'same');
+    Fx = imcomplement(Fx);
+    Fy = conv2(gaussian_image, Gy, 'same');
+
+    mag = sqrt((Fx.^2)+(Fy.^2));
+    %figure, imshow(mag, []), axis image, title('Magnitude');
+    D = (atan2(Fy,Fx))*180/pi;
+    %figure, imshow(D, []), axis image, title('Theta');
+
+    % PHASE 2 - Nonmaximum Suppression
+
+    [newX,newY] = size(D);
+    newD = zeros(newX,newY);
+    for x = 1 : newX
+        for y = 1 : newY
+
+            if D(x,y) < 0
+                D(x,y) = D(x,y) + 360; % makes all directions positive
+            end
+
+            D(x,y) = mod(D(x,y), 180);
+
+            if  D(x,y) <= 22.5
+                newD(x,y) = 0;
+            elseif D(x,y) <= 67.5
+                newD(x,y) = 45;
+            elseif D(x,y) <= 112.5
+                newD(x,y) = 90;
+            elseif D(x,y) <= 157.5
+                newD(x,y) = 135;
+            elseif D(x,y) <= 180
+                newD(x,y) = 0;
+
+            end
+        end
+    end
+
+    I = zeros(newX, newY);
+    for i = 2 : newX-1
+        for j = 2 : newY-1
+            if (newD(i,j)==0)
+                I(i,j) = (mag(i,j) == max([mag(i,j), mag(i,j+1), mag(i,j-1)]));
+            elseif (newD(i,j)==45)
+                I(i,j) = (mag(i,j) == max([mag(i,j), mag(i+1,j-1), mag(i-1,j+1)]));
+            elseif (newD(i,j)==90)
+                I(i,j) = (mag(i,j) == max([mag(i,j), mag(i+1,j), mag(i-1,j)]));
+            elseif (newD(i,j)==135)
+                I(i,j) = (mag(i,j) == max([mag(i,j), mag(i+1,j+1), mag(i-1,j-1)]));
+            end
+        end
+    end
+    I = I.*mag;
+    %figure, imshow(I, []), axis image, title('Non-Max Suppressed');
+
+    % PHASE 3 - Hysteresis Thresholding
+
+    low = 0.05 * max(max(I));
+    high = 0.20 * max(max(I));
+    result = zeros (newX, newY);
+    for i = 1  : newX
+        for j = 1 : newY
+            if I(i, j) < low
+                result(i, j) = 0;
+            elseif I(i, j) > high
+                result(i, j) = 1;
+            elseif I(i+1,j)>high || I(i-1,j)>high || I(i,j+1)>high || I(i,j-1)>high || I(i-1, j-1)>high || I(i-1, j+1)>high || I(i+1, j+1)>high || I(i+1, j-1)>high
+                result(i,j) = 1;
+            end
+        end
+    end
+    finalEdges = uint8(result.*255);
+%    figure, imshow(finalEdges, []), axis image, title('Final Edges');
+
+
+
+    %%%
+    %%%   HOUGH TRANSFORM PUPIL DETECTION
+    %%%
+
+%    figure, imshow(image), axis image, title('After Manipulation');
+
+    [x, y] = size(original);
+    crop = imcrop(original, [kernal_padding, kernal_padding, y-kernal_padding, x-kernal_padding] );
+%    figure, imshow(crop), axis image, title('Pupil / Iris Detection');
+
+    pupilCenters = [];
+    while (size(pupilCenters) ~= 1) & (houghSensitivity ~= 1.0)
+        [pupilCenters, pupilR] = imfindcircles(finalEdges, pupilRadii, 'Sensitivity', houghSensitivity);
+        houghSensitivity = houghSensitivity + 0.01;
+    end
+    "Pupil"
+    houghSensitivity
+    houghSensitivity = houghSensitivityBase;
+%    viscircles(pupilCenters, pupilR, 'Color', 'b');
+
+    irisCenters = [];
+    while (size(irisCenters) ~= 1) & (houghSensitivity ~= 1.0)
+        [irisCenters, irisR] = imfindcircles(finalEdges, irisRadii, 'Sensitivity', houghSensitivity);
+       houghSensitivity = houghSensitivity + 0.01;
+    end
+    "Iris"
+    houghSensitivity
+    houghSensitivity = houghSensitivityBase;
+%    viscircles(irisCenters, irisR, 'Color', 'r');
+    
     %%%
     %%%   Eye Mask Overlaying
     %%%
@@ -306,7 +289,7 @@ for i = 0:1
         end
     end
 
-    figure, imshow(testImage), axis image, title('Color Addition');
+%    figure, imshow(testImage), axis image, title('Color Addition');
     
     testImage = imresize(testImage, [NaN W]);
     [newH, newW, ~] = size(testImage); 
