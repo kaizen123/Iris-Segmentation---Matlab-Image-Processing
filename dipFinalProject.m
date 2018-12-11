@@ -16,8 +16,13 @@
 brightnessScalar = 1.5;
 blurScalar = 15;
 blurSigma = 1.8;
-pupilRadii = [10 21];
-irisRadii = [21 63];
+pupilRadii = [16 31];
+%guy image, 10 - 22
+% woman image 10 - 28
+% AA woman 10 - 22
+% fringe 16 - 31
+% blue eyed man 16 - 31
+irisRadii = [30 70];
 houghSensitivity = 0.80;
 houghSensitivityBase = houghSensitivity;
 
