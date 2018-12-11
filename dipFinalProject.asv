@@ -41,20 +41,20 @@ if( checkToolboxes(reqToolboxes) )
     detector = buildDetector();
     [bbox bbimg faces bbfaces] = detectFaceParts(detector,image,2);
     
-%    figure;imshow(bbimg);
+    figure;imshow(bbimg);
 
     leftEye = imcrop(image, bbox(:, 5: 8));
     rightEye = imcrop(image, bbox(:, 9:12));
     leftEyeBbox = bbox(:, 5:8);
     rightEyeBbox = bbox(:, 9:12);
     
-%    figure;imshow(leftEye);
-%    figure;imshow(rightEye);
+    figure;imshow(leftEye);
+    figure;imshow(rightEye);
 
-%    figure;imshow(bbimg);
-%    for i=1:size(bbfaces,1)
-%        figure;imshow(bbfaces{i});
-%    end
+    figure;imshow(bbimg);
+    for i=1:size(bbfaces,1)
+        figure;imshow(bbfaces{i});
+    end
 else
     flag = 1;
     error('detectFaceParts requires: Computer Vision System Toolbox and Image Processing Toolbox. Please install these toolboxes.');
@@ -190,7 +190,7 @@ for i = 0:1
         end
     end
     finalEdges = uint8(result.*255);
-%    figure, imshow(finalEdges, []), axis image, title('Final Edges');
+    figure, imshow(finalEdges, []), axis image, title('Final Edges');
 
 
 
@@ -198,7 +198,7 @@ for i = 0:1
     %%%   HOUGH TRANSFORM PUPIL DETECTION
     %%%
 
-%    figure, imshow(image), axis image, title('After Manipulation');
+    figure, imshow(image), axis image, title('After Manipulation');
 
     [x, y] = size(original);
     crop = imcrop(original, [kernal_padding, kernal_padding, y-kernal_padding, x-kernal_padding] );
@@ -259,13 +259,13 @@ for i = 0:1
         end
     end
 
-%    figure, imshow(testImage), axis image, title('Color Addition');
+    figure, imshow(testImage), axis image, title('Color Addition');
     
     testImage = imresize(testImage, [NaN W]);
     [newH, newW, ~] = size(testImage); 
+    figure,imshow(testImage);
     originalImage(Y:Y+newH-1, X:X+newW-1, :) = testImage;
+    figure, imshow(image, []), axis image, title('Final Image');
 end
-
-figure, imshow(originalImage, []), axis image, title('Final Image');
 
 
