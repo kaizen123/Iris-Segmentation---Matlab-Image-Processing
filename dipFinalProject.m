@@ -16,13 +16,13 @@
 brightnessScalar = 1.5;
 blurScalar = 15;
 blurSigma = 1.8;
-pupilRadii = [16 31];
-%guy image, 10 - 22
+pupilRadii = [10 20];
+%guy image, 10 - 20
 % woman image 10 - 28
 % AA woman 10 - 22
 % fringe 16 - 31
 % blue eyed man 16 - 31
-irisRadii = [30 70];
+irisRadii = [21 60];
 houghSensitivity = 0.80;
 houghSensitivityBase = houghSensitivity;
 
@@ -276,9 +276,15 @@ for i = 0:1
     for i = 1 : floor(pupilR(1)*2)
         for j = 1 : floor(pupilR(1)*2)
         %         if testImage(topIrisBound + i, leftIrisBound + j, 1) >= 16 || testImage(topIrisBound + i, leftIrisBound + j, 2) >= 16 || testImage(topIrisBound + i, leftIrisBound + j, 3) >= 16
-            testImage(topPupilBound + i, leftPupilBound + j, 1) = testImage(topPupilBound + i, leftPupilBound + j, 1) - floor(pupilMask(i,j, 1)*0.5);
-            testImage(topPupilBound + i, leftPupilBound + j, 2) = testImage(topPupilBound + i, leftPupilBound + j, 2) - floor(pupilMask(i,j, 2)*0.5);
-            testImage(topPupilBound + i, leftPupilBound + j, 3) = testImage(topPupilBound + i, leftPupilBound + j, 3) - floor(pupilMask(i,j, 3)*0.5);
+            p1 = testImage(topPupilBound + i, leftPupilBound + j, 1);
+            p2 = testImage(topPupilBound + i, leftPupilBound + j, 2);
+            p3 = testImage(topPupilBound + i, leftPupilBound + j, 3);
+            c1 = bwImage(topPupilBound + i, leftPupilBound + j, 1);
+            c2 = bwImage(topPupilBound + i, leftPupilBound + j, 2);
+            c3 = bwImage(topPupilBound + i, leftPupilBound + j, 3);
+            testImage(topPupilBound + i, leftPupilBound + j, 1) = p1 - (p1 - c1)*(pupilMask(i,j, 1)/77);
+            testImage(topPupilBound + i, leftPupilBound + j, 2) = p2 - (p2 - c2)*(pupilMask(i,j, 2)/77);
+            testImage(topPupilBound + i, leftPupilBound + j, 3) = p3 - (p3 - c3)*(pupilMask(i,j, 3)/77);
 %         end
         end
     end
