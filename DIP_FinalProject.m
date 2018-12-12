@@ -292,5 +292,6 @@ end
 function pushbutton_savePortrait_Callback(hObject, eventdata, handles)
     F = getframe(handles.portraitHolder);
     Image = frame2im(F);
-    imwrite(Image, 'New Eyes.jpg')
+    name = uiputfile('New Eyes.jpg');
+    imwrite(Image, name);
 end

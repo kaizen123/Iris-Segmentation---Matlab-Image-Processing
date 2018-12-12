@@ -16,13 +16,13 @@ function [finalImage, bbox, pupilCentersFinal, pupilRFinal, irisCentersFinal, ir
 brightnessScalar = 1.5;
 blurScalar = 15;
 blurSigma = 1.8;
-pupilRadii = [10 20];
-%guy image, 10 - 20
+pupilRadii = [10 30];
+% guy image, 10 - 20
 % woman image 10 - 28
 % AA woman 10 - 22
 % fringe 16 - 31
 % blue eyed man 16 - 31
-irisRadii = [21 60];
+irisRadii = [30 70];
 houghSensitivity = 0.80;
 houghSensitivityBase = houghSensitivity;
 computeEye = computeEyeP;
@@ -233,7 +233,7 @@ for outerLoop = 0:1
     %    figure, imshow(crop), axis image, title('Pupil / Iris Detection');
 
         pupilCenters = [];
-        while (size(pupilCenters) ~= 1) & (houghSensitivity ~= 1.0)
+        while (size(pupilCenters) == 0) & (houghSensitivity ~= 1.0)
             [pupilCenters, pupilR] = imfindcircles(finalEdges, pupilRadii, 'Sensitivity', houghSensitivity);
             houghSensitivity = houghSensitivity + 0.01;
         end
@@ -241,9 +241,11 @@ for outerLoop = 0:1
         houghSensitivity
         houghSensitivity = houghSensitivityBase;
     %    viscircles(pupilCenters, pupilR, 'Color', 'b');
+        pupilCenters = pupilCenters(1,:);
+        pupilR = pupilR(1);
 
         irisCenters = [];
-        while (size(irisCenters) ~= 1) & (houghSensitivity ~= 1.0)
+        while (size(irisCenters) == 0) & (houghSensitivity ~= 1.0)
             [irisCenters, irisR] = imfindcircles(finalEdges, irisRadii, 'Sensitivity', houghSensitivity);
            houghSensitivity = houghSensitivity + 0.01;
         end
@@ -251,6 +253,8 @@ for outerLoop = 0:1
         houghSensitivity
         houghSensitivity = houghSensitivityBase;
     %    viscircles(irisCenters, irisR, 'Color', 'r');
+        irisCenters = irisCenters(1,:);
+        irisR = irisR(1);
     
         if( outerLoop == 0)
             irisCentersL = irisCenters;
