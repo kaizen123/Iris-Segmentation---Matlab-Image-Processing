@@ -81,8 +81,12 @@ function pushbutton_green_Callback(hObject, eventdata, handles)
     global path;
     global bbox;
     global computeEye;
+    global pupilCentersFinal; 
+    global pupilRFinal; 
+    global irisCentersFinal; 
+    global irisRFinal;
     image = imread(path);
-    [testImage, bbox] = changeEyeColor(image, 'color_Green.png', bbox, computeEye);
+    [testImage, bbox, pupilCentersFinal, pupilRFinal, irisCentersFinal, irisRFinal] = changeEyeColor(image, 'color_Green.png', bbox, computeEye, pupilCentersFinal, pupilRFinal, irisCentersFinal, irisRFinal);
     computeEye = 0;
     imshow(testImage);
 end
@@ -91,8 +95,12 @@ function pushbutton_brown_Callback(hObject, eventdata, handles)
     global path;
     global bbox;
     global computeEye;
+    global pupilCentersFinal; 
+    global pupilRFinal; 
+    global irisCentersFinal; 
+    global irisRFinal;
     image = imread(path);
-    [testImage, bbox] = changeEyeColor(image, 'color_Brown.png', bbox, computeEye);
+    [testImage, bbox, pupilCentersFinal, pupilRFinal, irisCentersFinal, irisRFinal] = changeEyeColor(image, 'color_Brown.png', bbox, computeEye, pupilCentersFinal, pupilRFinal, irisCentersFinal, irisRFinal);
     computeEye = 0;
     imshow(testImage);
     
@@ -102,28 +110,40 @@ function pushbutton_pink_Callback(hObject, eventdata, handles)
     global path;
     global bbox;
     global computeEye;
+    global pupilCentersFinal; 
+    global pupilRFinal; 
+    global irisCentersFinal; 
+    global irisRFinal;
     image = imread(path);
-    [testImage, bbox] = changeEyeColor(image, 'color_Pink.png', bbox, computeEye);
+    [testImage, bbox, pupilCentersFinal, pupilRFinal, irisCentersFinal, irisRFinal] = changeEyeColor(image, 'color_Pink.png', bbox, computeEye, pupilCentersFinal, pupilRFinal, irisCentersFinal, irisRFinal);
     computeEye = 0;
     imshow(testImage);
 end
 
 function pushbutton_honey_Callback(hObject, eventdata, handles)
-global path;
+ global path;
     global bbox;
     global computeEye;
+    global pupilCentersFinal; 
+    global pupilRFinal; 
+    global irisCentersFinal; 
+    global irisRFinal;
     image = imread(path);
-    [testImage, bbox] = changeEyeColor(image, 'color_Honey.png', bbox, computeEye);
+    [testImage, bbox, pupilCentersFinal, pupilRFinal, irisCentersFinal, irisRFinal] = changeEyeColor(image, 'color_Honey.png', bbox, computeEye, pupilCentersFinal, pupilRFinal, irisCentersFinal, irisRFinal);
     computeEye = 0;
     imshow(testImage);
 end
 
 function pushbutton_sterlingGrey_Callback(hObject, eventdata, handles)
-    global path;
+     global path;
     global bbox;
     global computeEye;
+    global pupilCentersFinal; 
+    global pupilRFinal; 
+    global irisCentersFinal; 
+    global irisRFinal;
     image = imread(path);
-    [testImage, bbox] = changeEyeColor(image, 'color_SterlingGrey.png', bbox, computeEye);
+    [testImage, bbox, pupilCentersFinal, pupilRFinal, irisCentersFinal, irisRFinal] = changeEyeColor(image, 'color_sterlingGrey.png', bbox, computeEye, pupilCentersFinal, pupilRFinal, irisCentersFinal, irisRFinal);
     computeEye = 0;
     imshow(testImage);
 end
@@ -132,88 +152,124 @@ function pushbutton_blue_Callback(hObject, eventdata, handles)
     global path;
     global bbox;
     global computeEye;
+    global pupilCentersFinal; 
+    global pupilRFinal; 
+    global irisCentersFinal; 
+    global irisRFinal;
     image = imread(path);
-    [testImage, bbox] = changeEyeColor(image, 'color_Blue.png', bbox, computeEye);
+    [testImage, bbox, pupilCentersFinal, pupilRFinal, irisCentersFinal, irisRFinal] = changeEyeColor(image, 'color_Blue.png', bbox, computeEye, pupilCentersFinal, pupilRFinal, irisCentersFinal, irisRFinal);
     computeEye = 0;
     imshow(testImage);
 end
 
 function pushbutton_violet_Callback(hObject, eventdata, handles)
-global path;
+    global path;
     global bbox;
     global computeEye;
+    global pupilCentersFinal; 
+    global pupilRFinal; 
+    global irisCentersFinal; 
+    global irisRFinal;
     image = imread(path);
-    [testImage, bbox] = changeEyeColor(image, 'color_Violet.png', bbox, computeEye);
+    [testImage, bbox, pupilCentersFinal, pupilRFinal, irisCentersFinal, irisRFinal] = changeEyeColor(image, 'color_Violet.png', bbox, computeEye, pupilCentersFinal, pupilRFinal, irisCentersFinal, irisRFinal);
     computeEye = 0;
     imshow(testImage);
 end
 
 function pushbutton_grey_Callback(hObject, eventdata, handles)
-global path;
+    global path;
     global bbox;
     global computeEye;
+    global pupilCentersFinal; 
+    global pupilRFinal; 
+    global irisCentersFinal; 
+    global irisRFinal;
     image = imread(path);
-    [testImage, bbox] = changeEyeColor(image, 'color_Grey.png', bbox, computeEye);
+    [testImage, bbox, pupilCentersFinal, pupilRFinal, irisCentersFinal, irisRFinal] = changeEyeColor(image, 'color_Grey.png', bbox, computeEye, pupilCentersFinal, pupilRFinal, irisCentersFinal, irisRFinal);
     computeEye = 0;
     imshow(testImage);
 end
 
 function pushbutton_turquoise_Callback(hObject, eventdata, handles)
-global path;
+    global path;
     global bbox;
     global computeEye;
+    global pupilCentersFinal; 
+    global pupilRFinal; 
+    global irisCentersFinal; 
+    global irisRFinal;
     image = imread(path);
-    [testImage, bbox] = changeEyeColor(image, 'color_Turquoise.png', bbox, computeEye);
+    [testImage, bbox, pupilCentersFinal, pupilRFinal, irisCentersFinal, irisRFinal] = changeEyeColor(image, 'color_Turquoise.png', bbox, computeEye, pupilCentersFinal, pupilRFinal, irisCentersFinal, irisRFinal);
     computeEye = 0;
     imshow(testImage);
 end
 
 function pushbutton_trueSapphire_Callback(hObject, eventdata, handles)
-global path;
+    global path;
     global bbox;
     global computeEye;
+    global pupilCentersFinal; 
+    global pupilRFinal; 
+    global irisCentersFinal; 
+    global irisRFinal;
     image = imread(path);
-    [testImage, bbox] = changeEyeColor(image, 'color_TrueSapphire.png', bbox, computeEye);
+    [testImage, bbox, pupilCentersFinal, pupilRFinal, irisCentersFinal, irisRFinal] = changeEyeColor(image, 'color_trueSapphire.png', bbox, computeEye, pupilCentersFinal, pupilRFinal, irisCentersFinal, irisRFinal);
     computeEye = 0;
     imshow(testImage);
 end
 
 function pushbutton_red_Callback(hObject, eventdata, handles)
-global path;
+    global path;
     global bbox;
     global computeEye;
+    global pupilCentersFinal; 
+    global pupilRFinal; 
+    global irisCentersFinal; 
+    global irisRFinal;
     image = imread(path);
-    [testImage, bbox] = changeEyeColor(image, 'color_Red.png', bbox, computeEye);
+    [testImage, bbox, pupilCentersFinal, pupilRFinal, irisCentersFinal, irisRFinal] = changeEyeColor(image, 'color_Red.png', bbox, computeEye, pupilCentersFinal, pupilRFinal, irisCentersFinal, irisRFinal);
     computeEye = 0;
     imshow(testImage);
 end
 
 function pushbutton_hazel_Callback(hObject, eventdata, handles)
-global path;
+    global path;
     global bbox;
     global computeEye;
+    global pupilCentersFinal; 
+    global pupilRFinal; 
+    global irisCentersFinal; 
+    global irisRFinal;
     image = imread(path);
-    [testImage, bbox] = changeEyeColor(image, 'color_Hazel.png', bbox, computeEye);
+    [testImage, bbox, pupilCentersFinal, pupilRFinal, irisCentersFinal, irisRFinal] = changeEyeColor(image, 'color_Hazel.png', bbox, computeEye, pupilCentersFinal, pupilRFinal, irisCentersFinal, irisRFinal);
     computeEye = 0;
     imshow(testImage);
 end
 
 function pushbutton_gemstoneGreen_Callback(hObject, eventdata, handles)
-global path;
+    global path;
     global bbox;
     global computeEye;
+    global pupilCentersFinal; 
+    global pupilRFinal; 
+    global irisCentersFinal; 
+    global irisRFinal;
     image = imread(path);
-    [testImage, bbox] = changeEyeColor(image, 'color_GemstoneGreen.png', bbox, computeEye);
+    [testImage, bbox, pupilCentersFinal, pupilRFinal, irisCentersFinal, irisRFinal] = changeEyeColor(image, 'color_GemstoneGreen.png', bbox, computeEye, pupilCentersFinal, pupilRFinal, irisCentersFinal, irisRFinal);
     computeEye = 0;
     imshow(testImage);
 end
 
 function pushbutton_brilliantBlue_Callback(hObject, eventdata, handles)
-global path;
+    global path;
     global bbox;
     global computeEye;
+    global pupilCentersFinal; 
+    global pupilRFinal; 
+    global irisCentersFinal; 
+    global irisRFinal;
     image = imread(path);
-    [testImage, bbox] = changeEyeColor(image, 'color_BrilliantBlue.png', bbox, computeEye);
+    [testImage, bbox, pupilCentersFinal, pupilRFinal, irisCentersFinal, irisRFinal] = changeEyeColor(image, 'color_BrilliantBlue.png', bbox, computeEye, pupilCentersFinal, pupilRFinal, irisCentersFinal, irisRFinal);
     computeEye = 0;
     imshow(testImage);
 end
